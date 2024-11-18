@@ -1,0 +1,49 @@
+# Project: GoldenModelSAD
+
+# Variáveis
+CPP = g++
+CC = gcc
+WINDRES = windres
+OBJ = DataLogger.o GeradorSinaisIN.o SadCalculator.o SADSystem.o
+BIN = bin/GoldenModelSAD.exe
+
+# Caminhos de inclusão e biblioteca (deixe vazio por padrão para portabilidade)
+INCLUDE_PATH = 
+LIB_PATH = 
+
+# Flags
+CXXFLAGS = -std=c++11 $(INCLUDE_PATH)
+LIBS = $(LIB_PATH) -static-libgcc
+RM = rm -f
+
+# Regras
+.PHONY: all clean
+
+# Regra padrão: compila tudo
+all: $(BIN)
+
+# Limpa os arquivos gerados
+clean:
+	$(RM) $(OBJ) $(BIN)
+
+# Linkagem final
+$(BIN): $(OBJ)
+	@mkdir -p bin
+	$(CPP) $(OBJ) -o $(BIN) $(LIBS)
+
+# Compila cada arquivo objeto
+DataLogger.o: DataLogger.cpp
+	$(CPP) -c DataLogger.cpp -o DataLogger.o $(CXXFLAGS)
+
+GeradorSinaisIN.o: GeradorSinaisIN.cpp
+	$(CPP) -c GeradorSinaisIN.cpp -o GeradorSinaisIN.o $(CXXFLAGS)
+
+SadCalculator.o: SadCalculator.cpp
+	$(CPP) -c SadCalculator.cpp -o SadCalculator.o $(CXXFLAGS)
+
+SADSystem.o: SADSystem.cpp
+	$(CPP) -c SADSystem.cpp -o SADSystem.o $(CXXFLAGS)
+
+# Regra para recursos adicionais, se necessário
+GoldenModelSAD_private.res: GoldenModelSAD_private.rc
+	$(WINDRES) -i GoldenModelSAD_private.rc --input-format=rc -o GoldenModelSAD_private.res -O coff
